@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP & APD Kubikel 20 kV | Edukasi PLN</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            500: '#00677F', // PLN Blue
+                            600: '#00556A',
+                            accent: '#f97316' // Safety Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .dark .glass-nav { background: rgba(17, 24, 39, 0.95); }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .step-line::before { content: ''; position: absolute; top: 0; bottom: 0; left: 15px; width: 2px; background: #e5e7eb; z-index: 0; }
+        .dark .step-line::before { background: #374151; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100">
+
+    <header class="fixed w-full top-0 z-50 glass-nav border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="images/2.png" alt="Logo UNESA" class="h-10 w-auto">
+                <img src="images/1.png" alt="Logo PLN" class="h-10 w-auto">
+                <div class="hidden md:block w-px h-8 bg-gray-300 mx-1"></div>
+                <span class="font-bold text-lg md:text-xl tracking-tight leading-tight">
+                    Edukasi Kubikel 20 kV
+                </span>
+            </div>
+            <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"><i data-lucide="moon" id="theme-icon" class="h-5 w-5"></i></button>
+        </div>
+    </header>
+
+    <section class="relative h-[600px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://cdn.antaranews.com/cache/730x487/2022/10/31/PLN-dan-pasokan-listrik-G20.jpeg" alt="Gardu Induk" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gray-900/80"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/20 backdrop-blur-sm text-brand-accent border border-brand-accent/30 text-sm font-medium mb-6">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Modul Pembelajaran Lapangan
+            </span>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                SOP Pemeliharaan <br/> Kubikel 20 kV
+            </h1>
+            <p class="text-lg text-gray-300 mb-10 max-w-2xl mx-auto">
+                Panduan lengkap prosedur pembebasan tegangan, pemeliharaan, dan penormalan sistem distribusi tenaga listrik sesuai standar PT PLN (Persero).
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="document.getElementById('sop-section').scrollIntoView()" class="px-8 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-lg transition shadow-lg flex items-center justify-center gap-2">
+                    <i data-lucide="list-checks" class="w-5 h-5"></i> Lihat Prosedur SOP
+                </button>
+                <button onclick="document.getElementById('quiz-section').scrollIntoView()" class="px-8 py-3 bg-gray-800/60 hover:bg-gray-800/80 backdrop-blur text-white border border-gray-500 font-bold rounded-lg transition">
+                    Uji Pemahaman
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="sop-section" class="py-20 px-6 bg-white dark:bg-gray-950">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Prosedur Kerja Pemeliharaan</h2>
+                <p class="text-gray-500 dark:text-gray-400">Langkah kerja pembebasan dan penormalan tegangan (SOP DIS.HAR.029)</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="relative step-line pl-4">
+                    <h3 class="text-xl font-bold text-brand-500 mb-6 flex items-center gap-2 bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-800 relative z-10">
+                        <i data-lucide="clipboard-list" class="w-6 h-6"></i> A. Persiapan & Pembebasan
+                    </h3>
+                    
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-brand-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                        <h4 class="font-bold text-lg mb-2">Koordinasi & Izin</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Petugas meminta izin pelepasan beban ke Piket/Instruktur. Catat waktu pelepasan.</p>
+                    </div>
+
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                        <h4 class="font-bold text-lg mb-2 text-red-600 dark:text-red-400">Lepas PMT (Pemutus Tenaga)</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Buka Circuit Breaker (CB) arah beban terlebih dahulu. Pastikan indikator menunjukkan OFF.</p>
+                    </div>
+
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+                        <h4 class="font-bold text-lg mb-2">Lepas PMS & LBS</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Setelah PMT lepas, buka PMS arah beban dan LBS Incoming. Catat waktu pelepasan.</p>
+                    </div>
+
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">4</div>
+                        <h4 class="font-bold text-lg mb-2 text-green-600 dark:text-green-400">Masukkan Grounding</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Masukkan DS Ground pada LBS Incoming, PMS PT, dan PMT arah beban untuk membuang sisa muatan.</p>
+                    </div>
+                </div>
+
+                <div class="relative step-line pl-4">
+                    <h3 class="text-xl font-bold text-brand-500 mb-6 flex items-center gap-2 bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-800 relative z-10">
+                        <i data-lucide="wrench" class="w-6 h-6"></i> B. Pelaksanaan & Penormalan
+                    </h3>
+
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">5</div>
+                        <h4 class="font-bold text-lg mb-2">Pelaksanaan Pemeliharaan</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            - Buka pintu kompartemen.<br>
+                            - Bersihkan isolator dengan sakafen/majun.<br>
+                            - Lumasi mekanik dengan WD40.<br>
+                            - Ukur tahanan isolasi & kontak.
+                        </p>
+                    </div>
+
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white font-bold text-sm">6</div>
+                        <h4 class="font-bold text-lg mb-2">Lepas Grounding</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Setelah pekerjaan selesai, pastikan alat kerja tidak tertinggal. Lepas semua DS Grounding sebelum penormalan.</p>
+                    </div>
+
+                    <div class="mb-8 relative z-10 ml-6">
+                        <div class="absolute -left-[33px] top-1 w-8 h-8 bg-brand-500 rounded-full flex items-center justify-center text-white font-bold text-sm">7</div>
+                        <h4 class="font-bold text-lg mb-2">Penormalan Tegangan</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            1. Masukkan PMS PT & LBS Incoming.<br>
+                            2. Masukkan PMT arah beban.<br>
+                            3. Lapor ke instruktur bahwa pekerjaan selesai.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equipment-section" class="py-20 px-6 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto max-w-6xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Peralatan Kerja & APD</h2>
+                <p class="text-gray-500 dark:text-gray-400">Daftar alat sesuai standar pemeliharaan kubikel (DIS.HAR.029)</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2 mb-10">
+                <button onclick="filterEquipment('all')" class="px-4 py-2 rounded-full text-sm font-medium bg-brand-500 text-white shadow-md">Semua</button>
+                <button onclick="filterEquipment('Alat Kerja Utama')" class="px-4 py-2 rounded-full text-sm font-medium bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 border">Alat Kerja</button>
+                <button onclick="filterEquipment('Alat Ukur')" class="px-4 py-2 rounded-full text-sm font-medium bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 border">Alat Ukur</button>
+                <button onclick="filterEquipment('APD & K3')" class="px-4 py-2 rounded-full text-sm font-medium bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 border">APD & K3</button>
+            </div>
+
+            <div id="equipment-list" class="space-y-6">
+                </div>
+        </div>
+    </section>
+
+    <section id="video-resources" class="py-20 px-6 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Video Panduan Lapangan</h2>
+                <p class="text-gray-500 dark:text-gray-400">Dokumentasi praktik manuver dan penggunaan alat kerja</p>
+            </div>
+
+            <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </div>
+    </section>
+
+    <section id="quiz-section" class="py-20 px-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto max-w-4xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Uji Pemahaman Materi</h2>
+                <p class="text-gray-500 dark:text-gray-400">Evaluasi pemahaman tentang SOP dan Keselamatan Kerja</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-950 rounded-2xl p-8 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div class="mb-8">
+                    <div class="flex justify-between items-end mb-2">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white" id="quiz-question-number">Pertanyaan 1</h3>
+                        <span class="text-sm font-medium text-gray-500" id="quiz-score">Skor: 0</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                        <div id="quiz-progress" class="bg-brand-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-6" id="quiz-question-text">Memuat...</h4>
+                <div class="space-y-3" id="quiz-options"></div>
+                <div id="quiz-feedback" class="hidden mt-6 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                    <p class="text-gray-800 dark:text-gray-200"></p>
+                    <button onclick="nextQuestion()" class="mt-3 px-4 py-2 bg-brand-500 text-white rounded-lg text-sm hover:bg-brand-600 transition">Pertanyaan Berikutnya</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto max-w-4xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Form Peminjaman Alat</h2>
+                <p class="text-gray-500 dark:text-gray-400">Checklist persiapan alat kerja dan material sebelum menuju lokasi</p>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Daftar Cek Kelengkapan</h3>
+                    <span class="text-sm text-gray-500" id="checklist-progress-text">0% Selesai</span>
+                </div>
+                <div id="checklist-container" class="space-y-8"></div>
+                <div class="mt-8 flex justify-end">
+                    <button onclick="resetChecklist()" class="text-sm text-red-500 hover:underline flex items-center gap-1"><i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset Checklist</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-12 px-6 transition-colors duration-300">
+        <div class="container mx-auto max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                
+                <div class="flex flex-col justify-center">
+                    <div class="flex items-center gap-2 mb-4 text-brand-500">
+                        <i data-lucide="shield" class="h-6 w-6"></i>
+                        <span class="font-bold text-xl text-gray-900 dark:text-white">APD Gardu Induk 20 kV</span>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                        Media pembelajaran interaktif ini disusun untuk memenuhi tugas Magang Kependidikan dan sebagai sarana edukasi siswa mengenai keselamatan kerja listrik.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h3 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">Disusun Oleh:</h3>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center text-brand-600 dark:text-brand-400 flex-shrink-0">
+                            <i data-lucide="user" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Zhafirah Mumtaz Zaliyanti</p>
+                            <p class="text-xs text-brand-600 dark:text-brand-400 font-mono mb-1">NIM: 23030184037</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">S1 Pendidikan Fisika<br>Universitas Negeri Surabaya (UNESA)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 flex flex-col justify-center">
+                    <h3 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">Tim Pembimbing:</h3>
+                    
+                    <div class="mb-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <i data-lucide="hard-hat" class="w-3 h-3 text-brand-500"></i>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Pembimbing Lapangan (PLN)</p>
+                        </div>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white pl-5">Agung Setyobudi, ST</p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <i data-lucide="graduation-cap" class="w-3 h-3 text-brand-500"></i>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Dosen Pembimbing (UNESA)</p>
+                        </div>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white pl-5">Dr. Oka Saputra, M.Pd</p>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 text-center text-xs text-gray-400">
+                &copy; 2025 Mahasiswa Magang UNESA - PT PLN UP2D Jatim. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DATASET ALAT
+        const equipment = [
+            { 
+                id: "1", name: "Handle Kubikel", category: "Alat Kerja Utama", 
+                description: "Tuas mekanik untuk mengoperasikan (memasukkan/melepas) LBS, PMT, dan PMS Grounding secara manual.", 
+                usage: "Pastikan handle sesuai dengan tipe kubikel. Putar dengan hentakan yang tegas sesuai petunjuk arah.", 
+                certification: "OEM Standard", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Handle+Kubikel" 
+            },
+            { 
+                id: "2", name: "Sackle Stick 20 KV", category: "Alat Kerja Utama", 
+                description: "Tongkat isolasi panjang (stick) untuk mengoperasikan CO (Cut Out) atau manuver jarak jauh.", 
+                usage: "Gunakan sarung tangan isolasi saat memegang stick. Jaga jarak aman tubuh.", 
+                certification: "IEC 60855", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Sackle+Stick+20KV" 
+            },
+            { 
+                id: "3", name: "Tool Set Mekanik", category: "Alat Kerja Utama", 
+                description: "Set kunci pas, kunci ring, obeng, dan tang untuk membuka tutup kubikel dan terminasi kabel.", 
+                usage: "Gunakan kunci sesuai ukuran baut. Simpan kembali di kotak setelah dipakai agar tidak tertinggal di dalam kubikel.", 
+                certification: "-", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Tool+Set" 
+            },
+            { 
+                id: "4", name: "Insulation Tester 5/10 KV", category: "Alat Ukur", 
+                description: "Alat ukur tahanan isolasi (Megger) untuk menguji kualitas isolasi kabel, busbar, dan PMT.", 
+                usage: "Pastikan tidak ada tegangan sebelum mengukur. Lakukan discharge (buang muatan) setelah pengukuran.", 
+                certification: "Calibrated", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Megger+5kV" 
+            },
+            { 
+                id: "5", name: "Volt Stick Detector 20 KV", category: "Alat Ukur", 
+                description: "Detektor tegangan tinggi untuk memastikan instalasi bebas tegangan sebelum disentuh.", 
+                usage: "Test alat pada sumber bertegangan dulu untuk memastikan fungsi, baru test ke instalasi yang akan dikerjakan.", 
+                certification: "Safety Grade", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Volt+Detector" 
+            },
+            { 
+                id: "6", name: "Earth Resistance Tester", category: "Alat Ukur", 
+                description: "Alat untuk mengukur nilai tahanan pembumian (grounding) pada gardu.", 
+                usage: "Pastikan kabel test terhubung baik ke tanah. Nilai yang baik < 5 Ohm (tergantung standar).", 
+                certification: "Calibrated", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Earth+Tester" 
+            },
+            { 
+                id: "7", name: "Sarung Tangan Isolasi 20 KV", category: "APD & K3", 
+                description: "Sarung tangan karet tahan tegangan tinggi untuk manuver.", 
+                usage: "Wajib tes kebocoran (ditiup) sebelum dipakai. Jangan pakai jika ada retak/lubang.", 
+                certification: "ASTM D120 Class 2", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Gloves+20KV" 
+            },
+            { 
+                id: "8", name: "Sepatu Pengaman Isolasi", category: "APD & K3", 
+                description: "Sepatu safety dengan sol isolator listrik (Dielectric) tahan 20kV.", 
+                usage: "Digunakan untuk mencegah tegangan langkah (step voltage).", 
+                certification: "ISO 20345", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Sepatu+Isolasi" 
+            },
+            { 
+                id: "9", name: "Cleaning Kit (WD40 & Sakafen)", category: "APD & K3", 
+                description: "Cairan pembersih isolator (Sakafen) dan pelumas mekanik (WD40/Contact Cleaner).", 
+                usage: "Gunakan kain majun bersih. Jangan semprot WD40 ke bagian isolator/kontak listrik.", 
+                certification: "-", image: "https://placehold.co/400x300/e2e8f0/1e293b?text=Cleaning+Kit" 
+            }
+        ];
+
+        // VIDEO DATA
+        const videoData = [
+            { id: "1", title: "Simulasi Manuver Kubikel 20kV", description: "Praktik memasukkan dan melepas beban sesuai SOP DIS.HAR.029.", duration: "10:20", thumbnail: "https://placehold.co/600x338/1f2937/FFF?text=Video+Manuver+Kubikel" },
+            { id: "2", title: "Cara Mengukur Tahanan Isolasi", description: "Penggunaan alat ukur Megger 5kV pada kabel incoming.", duration: "08:15", thumbnail: "https://placehold.co/600x338/1f2937/FFF?text=Video+Megger+Test" },
+            { id: "3", title: "Penggunaan Voltage Detector", description: "Langkah safety memastikan tegangan nol sebelum grounding.", duration: "05:45", thumbnail: "https://placehold.co/600x338/1f2937/FFF?text=Video+Safety+Check" }
+        ];
+
+        // KUIS DIPERLUAS (10 SOAL)
+        const quizData = [
+            { 
+                question: "Apa fungsi utama dari Helm Keselamatan (Safety Helmet) di Gardu Induk?", 
+                options: ["Melindungi dari sinar matahari", "Melindungi kepala dari benturan dan bahaya listrik", "Agar terlihat sebagai petugas PLN", "Sebagai tempat menaruh senter"], 
+                correct: 1, 
+                explanation: "Fungsi utama helm adalah melindungi kepala dari kejatuhan benda keras dan risiko tersengat listrik secara tidak sengaja." 
+            },
+            { 
+                question: "Alat apa yang digunakan untuk memastikan kabel sudah tidak bertegangan sebelum disentuh?", 
+                options: ["Multimeter biasa", "Voltage Detector 20kV", "Obeng tespen", "Tang kombinasi"], 
+                correct: 1, 
+                explanation: "Voltage Detector 20kV adalah alat khusus untuk mendeteksi tegangan menengah. Multimeter biasa akan rusak/meledak jika digunakan di 20kV." 
+            },
+            { 
+                question: "Mengapa pekerja wajib menggunakan sepatu safety jenis dielektrik?", 
+                options: ["Agar kaki tidak kotor", "Melindungi dari paku dan mengisolasi tubuh dari tanah", "Supaya seragam terlihat rapi", "Agar bisa berlari cepat saat darurat"], 
+                correct: 1, 
+                explanation: "Sepatu dielektrik memiliki sol isolator untuk mencegah aliran arus listrik (tegangan langkah) melewati tubuh pekerja menuju tanah." 
+            },
+            { 
+                question: "Dalam prosedur pembebasan tegangan, urutan manakah yang BENAR?", 
+                options: ["Lepas PMS dulu -> baru Lepas PMT", "Lepas PMT dulu -> baru Lepas PMS", "Langsung pasang grounding", "Buka pintu kubikel saat bertegangan"], 
+                correct: 1, 
+                explanation: "PMT (Pemutus Tenaga) harus dilepas dahulu untuk memutus arus beban, baru kemudian PMS (Pemisah) boleh dibuka." 
+            },
+            { 
+                question: "Cairan apa yang TIDAK BOLEH disemprotkan ke bagian isolator atau kontak listrik?", 
+                options: ["Sakafen", "Contact Cleaner", "WD40 (Pelumas)", "Alkohol"], 
+                correct: 2, 
+                explanation: "WD40 bersifat pelumas dan bisa menangkap debu yang bersifat konduktif. Isolator harus dibersihkan dengan Sakafen atau cairan khusus isolasi." 
+            },
+            { 
+                question: "Apa tujuan memasukkan Grounding (Pentanahan) pada kubikel saat pemeliharaan?", 
+                options: ["Untuk menghemat listrik", "Membuang sisa muatan listrik agar aman disentuh", "Agar tegangan menjadi stabil", "Sebagai syarat administrasi"], 
+                correct: 1, 
+                explanation: "Grounding berfungsi menyalurkan sisa muatan (kapasitansi) kabel ke tanah sehingga aman bagi pekerja yang akan menyentuh instalasi." 
+            },
+            { 
+                question: "Sackle Stick 20kV digunakan untuk...", 
+                options: ["Memukul paku", "Mengukur tahanan isolasi", "Manuver peralatan (CO) dari jarak jauh", "Membersihkan lantai"], 
+                correct: 2, 
+                explanation: "Sackle Stick adalah tongkat isolasi panjang untuk mengoperasikan Cut Out (CO) atau peralatan tegangan tinggi dari jarak aman." 
+            },
+            { 
+                question: "Kepada siapa petugas pelaksana harus meminta izin sebelum melepas beban?", 
+                options: ["Satpam", "Teman kerja", "Piket/Instruktur/Dispatcher", "Tidak perlu izin"], 
+                correct: 2, 
+                explanation: "Segala manuver jaringan harus dikoordinasikan dan mendapat izin dari pengatur beban (Piket/Dispatcher) demi keamanan sistem." 
+            },
+            { 
+                question: "Apa yang harus dilakukan SEBELUM melakukan penormalan tegangan (menyalakan kembali)?", 
+                options: ["Langsung masukkan PMT", "Melepas semua Grounding yang terpasang", "Meninggalkan alat kerja di dalam kubikel", "Memakai helm saja"], 
+                correct: 1, 
+                explanation: "Wajib melepas semua grounding set (DS Ground) dan memastikan tidak ada alat kerja tertinggal sebelum memasukkan tegangan." 
+            },
+            { 
+                question: "APD manakah yang berfungsi melindungi tubuh dari percikan api akibat korsleting (Arc Flash)?", 
+                options: ["Helm", "Wearpack (Pakaian Kerja)", "Sepatu Safety", "Earplug"], 
+                correct: 1, 
+                explanation: "Wearpack standar PLN biasanya dirancang tahan api (flame retardant) untuk melindungi kulit dari panas ekstrem akibat Arc Flash." 
+            }
+        ];
+
+        const checklistData = {
+            "Alat Kerja & Ukur": ["Handle Kubikel", "Sackle Stick 20 KV", "Tool Set Lengkap", "Volt Detector 20 KV", "Insulation Tester (Megger)"],
+            "APD Petugas": ["Helm Pengaman (Safety Helmet)", "Sepatu Isolasi 20 KV", "Sarung Tangan Isolasi 20 KV", "Pakaian Kerja (Wearpack)"],
+            "Material Pemeliharaan": ["Cairan Pembersih (Sakafen/WD40)", "Kain Majun Bersih", "Lembar Kerja / Form Laporan"]
+        };
+
+        // RENDER FUNCTIONS
+        function filterEquipment(category) {
+            const list = document.getElementById('equipment-list');
+            const items = category === 'all' ? equipment : equipment.filter(e => e.category === category || (category === 'APD & K3' && e.category === 'APD & K3'));
+            
+            list.innerHTML = items.map(item => `
+                <div class="fade-in bg-white dark:bg-gray-950 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col md:flex-row">
+                    <div class="md:w-1/3 bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-4">
+                        <img src="${item.image}" alt="${item.name}" class="max-h-40 object-contain mix-blend-multiply dark:mix-blend-normal">
+                    </div>
+                    <div class="p-6 flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-brand-500 uppercase tracking-wide bg-brand-500/10 px-2 py-1 rounded">${item.category}</span>
+                            <span class="text-xs text-gray-500 border border-gray-300 px-2 py-1 rounded">${item.certification}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">${item.name}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">${item.description}</p>
+                        <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs border-l-2 border-brand-500">
+                            <strong>Cara Pakai:</strong> ${item.usage}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderVideos() {
+            document.getElementById('video-grid').innerHTML = videoData.map(video => `
+                <div class="group bg-gray-50 dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-all duration-300">
+                    <div class="relative aspect-video bg-gray-200 dark:bg-gray-800 group-hover:opacity-90 transition cursor-pointer">
+                        <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition duration-300">
+                                <div class="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center shadow-lg"><i data-lucide="play" class="w-5 h-5 text-white ml-1"></i></div>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded font-medium">${video.duration}</div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 line-clamp-1">${video.title}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${video.description}</p>
+                        <button class="mt-4 text-sm font-semibold text-brand-500 hover:text-brand-600 flex items-center gap-1">
+                            Tonton Video <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let currentQuestion = 0, score = 0;
+        function renderQuiz() {
+            const q = quizData[currentQuestion];
+            document.getElementById('quiz-question-number').innerText = `Pertanyaan ${currentQuestion + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-score').innerText = `Skor: ${score}/${quizData.length}`;
+            document.getElementById('quiz-progress').style.width = `${((currentQuestion) / quizData.length) * 100}%`;
+            document.getElementById('quiz-question-text').innerText = q.question;
+            document.getElementById('quiz-options').innerHTML = q.options.map((opt, idx) => `
+                <button onclick="checkAnswer(${idx})" class="quiz-option w-full text-left px-5 py-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center justify-between group">
+                    <span class="text-gray-700 dark:text-gray-300 font-medium">${opt}</span>
+                    <div class="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center group-hover:border-brand-500"><div class="w-2.5 h-2.5 rounded-full bg-brand-500 opacity-0 transition-opacity"></div></div>
+                </button>
+            `).join('');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+        }
+
+        function checkAnswer(selectedIdx) {
+            const q = quizData[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedbackBox = document.getElementById('quiz-feedback');
+            options.forEach(btn => btn.disabled = true);
+            
+            if (selectedIdx === q.correct) {
+                options[selectedIdx].classList.add('bg-green-50', 'dark:bg-green-900/20', 'border-green-500');
+                feedbackBox.querySelector('p').innerHTML = `<span class="font-bold text-green-600 dark:text-green-400">Benar!</span> ${q.explanation}`;
+                score++;
+            } else {
+                options[selectedIdx].classList.add('bg-red-50', 'dark:bg-red-900/20', 'border-red-500');
+                options[q.correct].classList.add('border-green-500');
+                feedbackBox.querySelector('p').innerHTML = `<span class="font-bold text-red-600 dark:text-red-400">Kurang Tepat.</span> ${q.explanation}`;
+            }
+            document.getElementById('quiz-score').innerText = `Skor: ${score}/${quizData.length}`;
+            feedbackBox.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) { currentQuestion++; renderQuiz(); } else {
+                document.getElementById('quiz-progress').style.width = `100%`;
+                document.getElementById('quiz-question-text').innerHTML = `Kuis Selesai! <br><span class="text-brand-500">Skor Kamu: ${score} dari ${quizData.length}</span>`;
+                document.getElementById('quiz-options').innerHTML = `<button onclick="location.reload()" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">Ulangi Kuis</button>`;
+                document.getElementById('quiz-feedback').classList.add('hidden');
+            }
+        }
+
+        function renderChecklist() {
+            let html = '';
+            for (const [cat, items] of Object.entries(checklistData)) {
+                html += `<div class="mb-6"><h4 class="font-bold text-gray-900 dark:text-white mb-3 border-b pb-1 border-gray-200 dark:border-gray-700">${cat}</h4><div class="space-y-2">`;
+                items.forEach(item => {
+                    html += `<label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded transition"><input type="checkbox" onchange="updateChecklistProgress()" class="w-5 h-5 rounded text-brand-500 focus:ring-brand-500 border-gray-300"><span class="text-gray-700 dark:text-gray-300">${item}</span></label>`;
+                });
+                html += `</div></div>`;
+            }
+            document.getElementById('checklist-container').innerHTML = html;
+        }
+
+        function updateChecklistProgress() {
+            const all = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const pct = Math.round((checked.length / all.length) * 100);
+            document.getElementById('checklist-progress-text').innerText = `${pct}% Selesai`;
+        }
+        function resetChecklist() { document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false); updateChecklistProgress(); }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) { html.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
+            else { html.classList.add('dark'); localStorage.setItem('theme', 'dark'); }
+            lucide.createIcons();
+        }
+
+        window.onload = function() {
+            filterEquipment('all');
+            renderVideos();
+            renderQuiz();
+            renderChecklist();
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
