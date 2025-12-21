@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perawatan APD - Edukasi APD 20 kV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        body.dark-mode .sidebar {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn {
+            background: #2d2d2d;
+        }
+
+        .hamburger-btn span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn span {
+            background: #e0e0e0;
+        }
+
+        .sidebar.closed ~ .hamburger-btn {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .menu-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+
+        body.dark-mode .menu-item:hover {
+            background: #3a3a3a;
+        }
+
+        .menu-item.expandable {
+            position: relative;
+        }
+
+        .menu-item.expandable::before {
+            content: '▼';
+            margin-right: 10px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .menu-item.expandable.expanded::before {
+            transform: rotate(-180deg);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .submenu.show {
+            max-height: 300px;
+        }
+
+        .submenu-item {
+            padding: 12px 10px 12px 35px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .submenu-item {
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .submenu-item:hover {
+            background: #f8f8f8;
+        }
+
+        body.dark-mode .submenu-item:hover {
+            background: #404040;
+        }
+
+        .submenu-item.active {
+            background: #e8f4f8;
+            font-weight: 600;
+        }
+
+        body.dark-mode .submenu-item.active {
+            background: #3a4a4a;
+        }
+
+        a.menu-item, a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .header {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .header-left.shifted {
+            margin-left: 60px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #f4d03f;
+            border-radius: 5px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, #16a085 0%, #2ecc71 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .page-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .content-section {
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .content-section {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #16a085;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #16a085;
+        }
+
+        body.dark-mode .section-title {
+            color: #48c9b0;
+            border-bottom-color: #48c9b0;
+        }
+
+        .content-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .content-text {
+            color: #c0c0c0;
+        }
+
+        .care-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .care-card {
+            background: #e8f8f5;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #16a085;
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-mode .care-card {
+            background: #203a35;
+            border-left-color: #1abc9c;
+        }
+
+        .care-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .care-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #16a085;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .care-title {
+            color: #1abc9c;
+        }
+
+        .step-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        body.dark-mode .step-list li {
+            color: step-list;
+        }
+
+        .step-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #16a085;
+            font-weight: bold;
+        }
+
+        .alert-box {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 5px solid #dc3545;
+            margin-top: 20px;
+        }
+
+        body.dark-mode .alert-box {
+            background: #3a2020;
+            color: #ff6b7a;
+            border-left-color: #dc3545;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .sidebar { transform: translateX(-250px); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .content-area { padding: 20px; }
+            .page-hero { padding: 40px 25px; }
+            .page-hero h1 { font-size: 32px; }
+            .care-grid { grid-template-columns: 1fr; }
+            .header { padding-left: 70px; }
+            .header-title { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✕</div>
+    
+        <a href="index.html" class="menu-item">Beranda</a>
+
+        <div class="menu-item expandable expanded" onclick="toggleSubmenu(this)">
+            Materi APD
+        </div>
+
+        <div class="submenu show">
+            <a href="materi-pengertian.html" class="submenu-item">Pengertian & Fungsi APD</a>
+            <a href="materi-prosedur.html" class="submenu-item">Prosedur Pemeliharaan 20 kV</a>
+            <a href="materi-k3.html" class="submenu-item">APD & K3 Pemeliharaan 20 kV</a>
+            <a href="materi-perawatan.html" class="submenu-item active">Perawatan APD</a>
+        </div>
+
+        <a href="video.html" class="menu-item">Video Edukasi APD</a>
+        <a href="quiz.html" class="menu-item">Kuis</a>
+    </div>
+
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-content" id="mainContent">
+        <div class="header">
+            <div class="header-left" id="headerLeft">
+                <img src="images/1.png" class="logo">
+                <img src="images/2.png" class="logo" style="background: #8b7355;">
+                <div class="header-title">Edukasi APD 20 kV</div>
+            </div>
+            <div class="toggle-switch" id="darkModeToggle"></div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-hero">
+                <h1>🧼 Perawatan & Penyimpanan</h1>
+                <p>Prosedur perawatan, pengujian, dan penyimpanan alat pelindung diri untuk menjaga keandalan isolasi listrik.</p>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Mengapa APD Perlu Dirawat?</h2>
+                <p class="content-text">
+                    Karet isolasi pada APD rentan terhadap kerusakan akibat faktor lingkungan seperti kotoran, minyak, sinar UV, dan benda tajam. 
+                </p>
+                <div style="background: #fff9c4; padding: 15px; border-radius: 8px; border-left: 4px solid #fbc02d; color: #555; margin-bottom: 20px;">
+                    <strong>Konsep Fisika:</strong> Debu atau minyak di permukaan isolator dapat menciptakan jalur konduktif (surface tracking). Hal ini menurunkan nilai hambatan (R) dan memungkinkan arus bocor (leakage current) mengalir melintasi permukaan sarung tangan, yang dapat membahayakan pengguna.
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Prosedur Pemeriksaan Harian</h2>
+                <p class="content-text">Sebelum digunakan, setiap petugas wajib melakukan pemeriksaan visual:</p>
+                
+                <div class="care-grid">
+                    <div class="care-card">
+                        <div class="care-title">1. Tes Kebocoran Udara</div>
+                        
+                        <p class="content-text" style="font-size: 14px;">Khusus Sarung Tangan Isolasi 20 kV:</p>
+                        <ul class="step-list">
+                            <li>Gulung bagian lengan sarung tangan untuk menjebak udara di dalamnya.</li>
+                            <li>Tekan gulungan tersebut sehingga bagian jari menggelembung.</li>
+                            <li>Dekatkan ke telinga/wajah untuk mendeteksi suara desis atau hembusan angin.</li>
+                            <li>Jika ada kebocoran sekecil jarum pun, sarung tangan <strong>TIDAK BOLEH</strong> dipakai.</li>
+                        </ul>
+                    </div>
+
+                    <div class="care-card">
+                        <div class="care-title">2. Pemeriksaan Visual</div>
+                        <p class="content-text" style="font-size: 14px;">Periksa seluruh permukaan APD (Sepatu & Helm):</p>
+                        <ul class="step-list">
+                            <li>Cari keretakan (cracks) atau sobekan.</li>
+                            <li>Pastikan tidak ada kontaminasi minyak atau bahan kimia.</li>
+                            <li>Periksa apakah sol sepatu sudah aus/tipis.</li>
+                            <li>Pastikan tali helm (chin strap) berfungsi baik.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Pembersihan & Penyimpanan</h2>
+                
+                <div class="care-grid">
+                    <div class="care-card" style="border-left-color: #3498db; background: #ebf5fb;">
+                        <div class="care-title" style="color: #3498db;">Cara Membersihkan</div>
+                        <ul class="step-list">
+                            <li>Gunakan air hangat dan sabun netral (mild soap).</li>
+                            <li>Jangan gunakan deterjen keras, pemutih, atau pelarut minyak (bensin/thinner) karena dapat merusak struktur kimia karet.</li>
+                            <li>Bilas hingga bersih dan keringkan dengan diangin-anginkan (air dry).</li>
+                            <li>Jangan menjemur langsung di bawah terik matahari.</li>
+                        </ul>
+                    </div>
+
+                    <div class="care-card" style="border-left-color: #9b59b6; background: #f4ecf7;">
+                        <div class="care-title" style="color: #9b59b6;">Cara Menyimpan</div>
+                        <ul class="step-list">
+                            <li>Simpan di tempat sejuk, kering, dan gelap (jauh dari sinar UV/Matahari).</li>
+                            <li>Simpan sarung tangan dalam tas pelindung (canvas bag) secara vertikal/digantung.</li>
+                            <li><strong>JANGAN MELIPAT</strong> sarung tangan isolasi, karena lipatan permanen dapat memicu keretakan (stress cracking) pada karet.</li>
+                            <li>Hindari penyimpanan dekat sumber panas (mesin/heater).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Pengujian Berkala (Electrical Testing)</h2>
+                <p class="content-text">
+                    Walaupun APD terlihat bagus secara visual, kualitas isolasinya bisa menurun seiring waktu. Oleh karena itu, uji laboratorium wajib dilakukan.
+                </p>
+
+                <div class="alert-box">
+                    <strong>⚠️ Standar Pengujian:</strong> Sarung tangan isolasi harus diuji ketahanan listriknya (Dielectric Withstand Test) di laboratorium terakreditasi minimal setiap <strong>6 bulan sekali</strong>.
+                </div>
+
+                <p class="content-text" style="margin-top: 15px;">
+                    Jika APD tidak lulus uji tegangan, maka APD tersebut harus digunting/dirusak agar tidak digunakan kembali oleh orang lain secara tidak sengaja.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2025 Zhafirah Mumtaz Zaliyanti. Media Pembelajaran Pendidikan Fisika.
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const headerLeft = document.getElementById('headerLeft');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+            } else {
+                sidebar.classList.toggle('closed');
+                mainContent.classList.toggle('expanded');
+                headerLeft.classList.toggle('shifted');
+            }
+        }
+
+        function toggleSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('expanded');
+            submenu.classList.toggle('show');
+        }
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+        }
+
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.classList.toggle('active');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    </script>
+</body>
+</html>
