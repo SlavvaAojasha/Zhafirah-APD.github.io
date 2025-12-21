@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prosedur Pemeliharaan 20 kV - Edukasi APD 20 kV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        body.dark-mode .sidebar {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn {
+            background: #2d2d2d;
+        }
+
+        .hamburger-btn span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn span {
+            background: #e0e0e0;
+        }
+
+        .sidebar.closed ~ .hamburger-btn {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .menu-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+
+        body.dark-mode .menu-item:hover {
+            background: #3a3a3a;
+        }
+
+        .menu-item.expandable {
+            position: relative;
+        }
+
+        .menu-item.expandable::before {
+            content: '▼';
+            margin-right: 10px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .menu-item.expandable.expanded::before {
+            transform: rotate(-180deg);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .submenu.show {
+            max-height: 300px;
+        }
+
+        .submenu-item {
+            padding: 12px 10px 12px 35px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .submenu-item {
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .submenu-item:hover {
+            background: #f8f8f8;
+        }
+
+        body.dark-mode .submenu-item:hover {
+            background: #404040;
+        }
+
+        .submenu-item.active {
+            background: #e8f4f8;
+            font-weight: 600;
+        }
+
+        body.dark-mode .submenu-item.active {
+            background: #3a4a4a;
+        }
+
+        a.menu-item, a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .header {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .header-left.shifted {
+            margin-left: 60px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #f4d03f;
+            border-radius: 5px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .page-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .content-section {
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .content-section {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #d35400;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #d35400;
+        }
+
+        body.dark-mode .section-title {
+            color: #ff8c42;
+            border-bottom-color: #ff8c42;
+        }
+
+        .content-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .content-text {
+            color: #c0c0c0;
+        }
+
+        .step-container {
+            margin: 30px 0;
+        }
+
+        .step-box {
+            background: linear-gradient(to right, #fff5f0 0%, #ffffff 100%);
+            border-left: 5px solid #d35400;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        body.dark-mode .step-box {
+            background: linear-gradient(to right, #2a2520 0%, #2d2d2d 100%);
+            border-left-color: #ff8c42;
+        }
+
+        .step-box:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #d35400;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        body.dark-mode .step-number {
+            background: #ff8c42;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .step-title {
+            color: #ff8c42;
+        }
+
+        .step-desc {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+            margin-left: 50px;
+        }
+
+        body.dark-mode .step-desc {
+            color: #b0b0b0;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            transition: border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
+        }
+
+        body.dark-mode .tool-card {
+            background: #252525;
+            border-color: #444;
+        }
+
+        .tool-card:hover {
+            border-color: #d35400;
+            transform: translateY(-5px);
+        }
+
+        body.dark-mode .tool-card:hover {
+            border-color: #ff8c42;
+        }
+
+        .tool-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode .tool-name {
+            color: #e0e0e0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        body.dark-mode .warning-box {
+            background: #3a3520;
+            border-left-color: #ffc107;
+        }
+
+        .warning-box strong {
+            color: #d39e00;
+            font-size: 18px;
+        }
+
+        body.dark-mode .warning-box strong {
+            color: #ffdc5e;
+        }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        body.dark-mode .danger-box {
+            background: #3a2020;
+            border-left-color: #dc3545;
+        }
+
+        .danger-box strong {
+            color: #c82333;
+            font-size: 18px;
+        }
+
+        body.dark-mode .danger-box strong {
+            color: #ff6b7a;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        ul {
+            margin-left: 30px;
+            line-height: 2;
+        }
+
+        body.dark-mode ul {
+            color: #c0c0c0;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-250px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .page-hero {
+                padding: 40px 25px;
+            }
+
+            .page-hero h1 {
+                font-size: 32px;
+            }
+
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding-left: 70px;
+            }
+
+            .header-title {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✕</div>
+    
+        <a href="index.html" class="menu-item">Beranda</a>
+
+        <div class="menu-item expandable expanded" onclick="toggleSubmenu(this)">
+            Materi APD
+        </div>
+
+        <div class="submenu show">
+            <a href="materi-pengertian.html" class="submenu-item">Pengertian & Fungsi APD</a>
+            <a href="materi-prosedur.html" class="submenu-item active">Prosedur Pemeliharaan 20 kV</a>
+            <a href="materi-k3.html" class="submenu-item">APD & K3 Pemeliharaan 20 kV</a>
+            <a href="materi-perawatan.html" class="submenu-item">Perawatan APD</a>
+        </div>
+
+        <a href="video.html" class="menu-item">Video Edukasi APD</a>
+        <a href="quiz.html" class="menu-item">Kuis</a>
+    </div>
+
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-content" id="mainContent">
+        <div class="header">
+            <div class="header-left" id="headerLeft">
+                <img src="images/1.png" class="logo">
+                <img src="images/2.png" class="logo" style="background: #8b7355;">
+                <div class="header-title">Edukasi APD 20 kV</div>
+            </div>
+            <div class="toggle-switch" id="darkModeToggle"></div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-hero">
+                <h1>📋 Prosedur Pemeliharaan 20 kV</h1>
+                <p>Standar operasional prosedur (SOP) pemeliharaan kubkel 20 kV berdasarkan SOP DIS.HAR.029 (2) A</p>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Ringkasan Prosedur Kerja</h2>
+                <p class="content-text">
+                    Pekerjaan pemeliharaan pada tegangan menengah 20 kV merupakan pekerjaan berisiko tinggi yang memerlukan prosedur ketat dan sistematis. Setiap langkah harus dilakukan dengan cermat untuk menjamin keselamatan personel dan peralatan.
+                </p>
+                <div class="danger-box">
+                    <strong>⚠️ BAHAYA:</strong> Tegangan 20.000 Volt dapat menyebabkan kematian instan. Prosedur ini tidak boleh dilanggar dalam kondisi apapun.
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">A. Persiapan & Koordinasi</h2>
+                <div class="step-container">
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">1</span>
+                            <span class="step-title">Koordinasi Tim</span>
+                        </div>
+                        <p class="step-desc">
+                            Petugas wajib melakukan koordinasi dengan instruktur/pengawas sebelum memulai pekerjaan. Pastikan semua anggota tim memahami peran dan tanggung jawab masing-masing.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">2</span>
+                            <span class="step-title">Persiapan Alat Kerja</span>
+                        </div>
+                        <p class="step-desc">
+                            Mempersiapkan semua alat kerja yang diperlukan termasuk Tool set dan Handle Kubikel. Pastikan semua alat dalam kondisi baik dan siap digunakan.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">3</span>
+                            <span class="step-title">Persiapan Alat Ukur</span>
+                        </div>
+                        <p class="step-desc">
+                            Siapkan alat ukur yang diperlukan: Insulation Tester 5/10 KV, Earth Tester, dan Contact Resistance Tester. Lakukan kalibrasi jika diperlukan.
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 20px; color: #d35400; margin-top: 30px; margin-bottom: 15px;">Alat Kerja & Alat Ukur</h3>
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🔧</div>
+                        <div class="tool-name">Tool Set</div>
+                        <p style="font-size: 14px; color: #726e6e; margin-top: 5px;">Kunci pas, obeng, tang, dan peralatan mekanis lainnya</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🎛️</div>
+                        <div class="tool-name">Handle Kubikel</div>
+                        <p style="font-size: 14px; color: #726e6e; margin-top: 5px;">Untuk operasi manuver switching</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📏</div>
+                        <div class="tool-name">Insulation Tester</div>
+                        <p style="font-size: 14px; color: #726e6e; margin-top: 5px;">Mengukur tahanan isolasi 5/10 kV</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔌</div>
+                        <div class="tool-name">Earth Tester</div>
+                        <p style="font-size: 14px; color: #726e6e; margin-top: 5px;">Mengukur tahanan pembumian</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">⚡</div>
+                        <div class="tool-name">Contact Resistance Tester</div>
+                        <p style="font-size: 14px; color: #726e6e; margin-top: 5px;">Mengukur tahanan kontak hubung</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">B. Pembebasan Tegangan (De-energizing)</h2>
+                <p class="content-text">
+                    Langkah kritis untuk memutus aliran listrik sebelum pemeliharaan. Urutan pelepasan sangat penting dan tidak boleh diubah.
+                </p>
+
+                <div class="step-container">
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">1</span>
+                            <span class="step-title">Melepas PMT (Pemutus Tenaga) Beban</span>
+                        </div>
+                        <p class="step-desc">
+                            Buka PMT untuk memutuskan aliran arus beban. PMT berfungsi sebagai circuit breaker yang dapat memutus arus dalam kondisi berbeban.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">2</span>
+                            <span class="step-title">Melepas PMS (Pemisah) Arah Beban</span>
+                        </div>
+                        <p class="step-desc">
+                            Buka PMS untuk memisahkan secara fisik jalur ke beban. PMS hanya boleh dioperasikan dalam kondisi tanpa arus.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">3</span>
+                            <span class="step-title">Melepas LBS (Load Break Switch) Incoming</span>
+                        </div>
+                        <p class="step-desc">
+                            Buka LBS untuk memutus suplai dari sumber tegangan. Ini adalah langkah terakhir memutus jalur energi.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">4</span>
+                            <span class="step-title">Verifikasi Tidak Ada Tegangan</span>
+                        </div>
+                        <p class="step-desc">
+                            <strong>PENTING:</strong> Gunakan Voltage Stick Detector 20 KV untuk memastikan tidak ada tegangan sisa pada busbar dan kabel. Tegangan sisa kapasitif masih bisa membahayakan walaupun switching sudah off.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="danger-box">
+                    <strong>🚨 CRITICAL:</strong> Jangan pernah menyentuh peralatan sebelum verifikasi tegangan nol dengan Voltage Detector! Muatan kapasitif sisa dapat tetap ada walaupun semua switch sudah OFF.
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">C. Pengamanan (Grounding/LOTO)</h2>
+                <p class="content-text">
+                    Dalam fisika, proses ini adalah membuang muatan kapasitif sisa ke bumi dan mencegah energisasi kembali secara tidak sengaja.
+                </p>
+
+                <div class="step-container">
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">1</span>
+                            <span class="step-title">Memasang Grounding</span>
+                        </div>
+                        <p class="step-desc">
+                            Masukkan pisau Grounding (DS Ground) pada:
+                            <ul>
+                                <li>LBS Incoming</li>
+                                <li>PMS PT (Potential Transformer)</li>
+                                <li>PMT Arah Beban</li>
+                            </ul>
+                            Grounding memastikan semua komponen berada pada potensial nol (sama dengan tanah).
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">2</span>
+                            <span class="step-title">Lock Out Tag Out (LOTO)</span>
+                        </div>
+                        <p class="step-desc">
+                            Pasang gembok dan tanda peringatan pada semua switch yang telah dibuka untuk mencegah orang lain mengoperasikannya selama pemeliharaan berlangsung.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>💡 Prinsip Fisika:</strong> Grounding mengalirkan muatan listrik sisa ke bumi melalui jalur dengan resistansi sangat rendah, menjadikan peralatan aman untuk disentuh (potensial = 0 Volt relatif terhadap tanah).
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">D. Pelaksanaan Pemeliharaan</h2>
+                <div class="step-container">
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">1</span>
+                            <span class="step-title">Pembersihan</span>
+                        </div>
+                        <p class="step-desc">
+                            Membersihkan kompartemen, isolator, dan bushing menggunakan Contact Cleaner atau WD40. Kotoran dapat mengurangi nilai resistansi isolasi dan meningkatkan risiko flashover.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">2</span>
+                            <span class="step-title">Pelumasan</span>
+                        </div>
+                        <p class="step-desc">
+                            Memberikan pelumas (Electric Grease) pada kontak hubung mekanik untuk memastikan operasi switching yang smooth dan mengurangi resistansi kontak.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">3</span>
+                            <span class="step-title">Pengukuran</span>
+                        </div>
+                        <p class="step-desc">
+                            Mengukur ulang tahanan isolasi dan tahanan kontak untuk memastikan peralatan masih dalam kondisi standar operasi yang aman.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">E. Penormalan (Re-energizing)</h2>
+                <p class="content-text">
+                    Mengembalikan sistem ke posisi ON secara berurutan (kebalikan dari prosedur pelepasan) setelah semua peralatan dan personel dipastikan aman.
+                </p>
+
+                <div class="step-container">
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">1</span>
+                            <span class="step-title">Lepas Grounding</span>
+                        </div>
+                        <p class="step-desc">
+                            Keluarkan semua pisau grounding dari LBS, PMS PT, dan PMT. Pastikan tidak ada alat atau personel yang masih berada di area berbahaya.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">2</span>
+                            <span class="step-title">Masukkan LBS Incoming</span>
+                        </div>
+                        <p class="step-desc">
+                            Tutup LBS untuk menghubungkan kembali sumber tegangan ke sistem.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">3</span>
+                            <span class="step-title">Masukkan PMS Arah Beban</span>
+                        </div>
+                        <p class="step-desc">
+                            Tutup PMS untuk menghubungkan jalur ke beban.
+                        </p>
+                    </div>
+
+                    <div class="step-box">
+                        <div>
+                            <span class="step-number">4</span>
+                            <span class="step-title">Masukkan PMT Beban</span>
+                        </div>
+                        <p class="step-desc">
+                            Tutup PMT untuk mengalirkan arus ke beban. Sistem kembali beroperasi normal.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ PERHATIAN:</strong> Urutan re-energizing HARUS kebalikan dari de-energizing. Jangan pernah menutup PMT sebelum PMS tertutup, karena dapat menyebabkan busur api berbahaya.
+                </div>
+            </div>
+        </div>
+
+        <div class ="footer">
+            © 2025 Zhafirah Mumtaz Zaliyanti. Media Pembelajaran Pendidikan Fisika.
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const headerLeft = document.getElementById('headerLeft');
+        
+        // Mobile vs Desktop logic
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle('open');
+        } else {
+            sidebar.classList.toggle('closed');
+            mainContent.classList.toggle('expanded');
+            headerLeft.classList.toggle('shifted');
+        }
+    }
+
+    function toggleSubmenu(element) {
+        const submenu = element.nextElementSibling;
+        element.classList.toggle('expanded');
+        submenu.classList.toggle('show');
+    }
+
+    // Dark Mode Logic
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.classList.add('active');
+    }
+
+    darkModeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        this.classList.toggle('active');
+        
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    });
+</script>
+</body>
+</html>
