@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Edukasi APD - Edukasi APD 20 kV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        body.dark-mode .sidebar {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn {
+            background: #2d2d2d;
+        }
+
+        .hamburger-btn span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn span {
+            background: #e0e0e0;
+        }
+
+        .sidebar.closed ~ .hamburger-btn {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .menu-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+
+        body.dark-mode .menu-item:hover {
+            background: #3a3a3a;
+        }
+
+        .menu-item.expandable {
+            position: relative;
+        }
+
+        .menu-item.expandable::before {
+            content: '▼';
+            margin-right: 10px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .menu-item.expandable.expanded::before {
+            transform: rotate(-180deg);
+        }
+
+        .menu-item.active {
+            background: #e8f4f8;
+            font-weight: 600;
+        }
+
+        body.dark-mode .menu-item.active {
+            background: #3a4a4a;
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .submenu.show {
+            max-height: 300px;
+        }
+
+        .submenu-item {
+            padding: 12px 10px 12px 35px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .submenu-item {
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .submenu-item:hover {
+            background: #f8f8f8;
+        }
+
+        body.dark-mode .submenu-item:hover {
+            background: #404040;
+        }
+
+        a.menu-item, a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .header {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .header-left.shifted {
+            margin-left: 60px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #f4d03f;
+            border-radius: 5px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .intro-section {
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .intro-section {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .intro-text {
+            color: #c0c0c0;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        body.dark-mode .video-card {
+            background: #2d2d2d;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            padding: 25px;
+        }
+
+        .video-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .video-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        body.dark-mode .video-title {
+            color: #ecf0f1;
+        }
+
+        .video-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        body.dark-mode .video-description {
+            color: #aaa;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        body.dark-mode .info-box {
+            background: #3a3520;
+            border-left-color: #ffc107;
+        }
+
+        .info-box strong {
+            color: #d39e00;
+            font-size: 18px;
+        }
+
+        body.dark-mode .info-box strong {
+            color: #ffdc5e;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .sidebar { transform: translateX(-250px); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .content-area { padding: 20px; }
+            .page-hero { padding: 40px 25px; }
+            .page-hero h1 { font-size: 32px; }
+            .video-grid { grid-template-columns: 1fr; }
+            .header { padding-left: 70px; }
+            .header-title { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✕</div>
+    
+        <a href="index.html" class="menu-item">Beranda</a>
+
+        <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+            Materi APD
+        </div>
+
+        <div class="submenu">
+            <a href="materi-pengertian.html" class="submenu-item">Pengertian & Fungsi APD</a>
+            <a href="materi-prosedur.html" class="submenu-item">Prosedur Pemeliharaan 20 kV</a>
+            <a href="materi-k3.html" class="submenu-item">APD & K3 Pemeliharaan 20 kV</a>
+            <a href="materi-perawatan.html" class="submenu-item">Perawatan APD</a>
+        </div>
+
+        <a href="video.html" class="menu-item active">Video Edukasi APD</a>
+        <a href="quiz.html" class="menu-item">Kuis</a>
+    </div>
+
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-content" id="mainContent">
+        <div class="header">
+            <div class="header-left" id="headerLeft">
+                <img src="images/1.png" class="logo">
+                <img src="images/2.png" class="logo" style="background: #8b7355;">
+                <div class="header-title">Edukasi APD 20 kV</div>
+            </div>
+            <div class="toggle-switch" id="darkModeToggle"></div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-hero">
+                <h1>🎥 Video Edukasi APD</h1>
+                <p>Pelajari penggunaan dan pentingnya APD melalui video pembelajaran yang informatif</p>
+            </div>
+
+            <div class="intro-section">
+                <h2 style="font-size: 28px; color: #e74c3c; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #e74c3c;">
+                    Koleksi Video Pembelajaran
+                </h2>
+                <p class="intro-text">
+                    Video-video berikut menyajikan materi visual tentang penggunaan APD dan praktik K3 dalam pemeliharaan listrik tegangan menengah. Tonton dengan seksama untuk memahami prosedur yang benar dan pentingnya keselamatan kerja.
+                </p>
+                
+                <div class="info-box">
+                    <strong>💡 Tips Belajar:</strong>
+                    <p style="margin-top: 10px; line-height: 1.7; color: #726e6e;">
+                        Untuk pemahaman maksimal, disarankan untuk menonton video sambil membaca materi tertulis yang telah disediakan. Setelah menonton semua video, uji pemahaman Anda dengan mengikuti quiz yang tersedia.
+                    </p>
+                </div>
+            </div>
+
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="https://www.youtube.com/embed/poEobTeGH84" 
+                            title="Video Edukasi APD 1" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-badge">Video 1</span>
+                        <h3 class="video-title">Pengenalan APD dan Keselamatan Kerja</h3>
+                        <p class="video-description">
+                            Memahami dasar-dasar Alat Pelindung Diri (APD) dan pentingnya penggunaannya dalam lingkungan kerja, khususnya pada instalasi listrik tegangan menengah.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="https://www.youtube.com/embed/sFM27O5KAtc" 
+                            title="Video Edukasi APD 2" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-badge">Video 2</span>
+                        <h3 class="video-title">Prosedur Penggunaan APD yang Benar</h3>
+                        <p class="video-description">
+                            Demonstrasi langkah demi langkah cara menggunakan APD dengan benar, termasuk teknik pemeriksaan kondisi APD sebelum digunakan.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="https://www.youtube.com/embed/2XBY9zDMJIU" 
+                            title="Video Edukasi APD 3" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-badge">Video 3</span>
+                        <h3 class="video-title">Praktik K3 dalam Pemeliharaan Listrik</h3>
+                        <p class="video-description">
+                            Contoh implementasi Keselamatan dan Kesehatan Kerja (K3) dalam pekerjaan pemeliharaan listrik, mencakup prosedur LOTO dan penggunaan peralatan keselamatan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-section" style="margin-top: 40px;">
+                <h2 style="font-size: 24px; color: #e74c3c; margin-bottom: 20px;">
+                    📚 Langkah Selanjutnya
+                </h2>
+                <p class="intro-text">
+                    Setelah menonton semua video dan membaca materi yang tersedia, jangan lupa untuk:
+                </p>
+                <ul style="margin-left: 30px; line-height: 2; color: #726e6e;">
+                    <li>Mengikuti <a href="quiz.html" style="color: #e74c3c; font-weight: 600; text-decoration: none;">Quiz Uji Pemahaman</a> untuk mengukur seberapa baik Anda memahami materi</li>
+                    <li>Meninjau kembali bagian materi yang masih kurang dipahami</li>
+                    <li>Mempraktikkan pengetahuan yang didapat dengan simulasi atau di bawah pengawasan instruktur bersertifikat</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2025 Zhafirah Mumtaz Zaliyanti. Media Pembelajaran Pendidikan Fisika.
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const headerLeft = document.getElementById('headerLeft');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+            } else {
+                sidebar.classList.toggle('closed');
+                mainContent.classList.toggle('expanded');
+                headerLeft.classList.toggle('shifted');
+            }
+        }
+
+        function toggleSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('expanded');
+            submenu.classList.toggle('show');
+        }
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+        }
+
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.classList.toggle('active');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    </script>
+</body>
+</html>
