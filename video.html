@@ -210,7 +210,6 @@
         .logo {
             width: 40px;
             height: 40px;
-            background: #f4d03f;
             border-radius: 5px;
         }
 
@@ -403,6 +402,27 @@
             color: #ffdc5e;
         }
 
+        /* --- FIXED STYLES FOR TEXT VISIBILITY --- */
+        .info-text {
+            margin-top: 10px; 
+            line-height: 1.7; 
+            color: #726e6e;
+        }
+
+        body.dark-mode .info-text {
+            color: #d0d0d0; /* Readable in Dark Mode */
+        }
+
+        .next-steps-list {
+            margin-left: 30px; 
+            line-height: 2; 
+            color: #726e6e;
+        }
+
+        body.dark-mode .next-steps-list {
+            color: #d0d0d0; /* Readable in Dark Mode */
+        }
+
         .footer {
             background: #2c3e50;
             color: white;
@@ -456,7 +476,7 @@
         <div class="header">
             <div class="header-left" id="headerLeft">
                 <img src="images/1.png" class="logo">
-                <img src="images/2.png" class="logo" style="background: #8b7355;">
+                <img src="images/2.png" class="logo">
                 <div class="header-title">Edukasi APD 20 kV</div>
             </div>
             <div class="toggle-switch" id="darkModeToggle"></div>
@@ -478,7 +498,7 @@
                 
                 <div class="info-box">
                     <strong>💡 Tips Belajar:</strong>
-                    <p style="margin-top: 10px; line-height: 1.7; color: #726e6e;">
+                    <p class="info-text">
                         Untuk pemahaman maksimal, disarankan untuk menonton video sambil membaca materi tertulis yang telah disediakan. Setelah menonton semua video, uji pemahaman Anda dengan mengikuti quiz yang tersedia.
                     </p>
                 </div>
@@ -547,7 +567,7 @@
                 <p class="intro-text">
                     Setelah menonton semua video dan membaca materi yang tersedia, jangan lupa untuk:
                 </p>
-                <ul style="margin-left: 30px; line-height: 2; color: #726e6e;">
+                <ul class="next-steps-list">
                     <li>Mengikuti <a href="quiz.html" style="color: #e74c3c; font-weight: 600; text-decoration: none;">Quiz Uji Pemahaman</a> untuk mengukur seberapa baik Anda memahami materi</li>
                     <li>Meninjau kembali bagian materi yang masih kurang dipahami</li>
                     <li>Mempraktikkan pengetahuan yang didapat dengan simulasi atau di bawah pengawasan instruktur bersertifikat</li>
