@@ -210,7 +210,6 @@
         .logo {
             width: 40px;
             height: 40px;
-            background: #f4d03f;
             border-radius: 5px;
         }
 
@@ -351,6 +350,60 @@
             color: #1abc9c;
         }
 
+        /* --- FIXED: Info Box Styles (Yellow Box) --- */
+        .info-box-yellow {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #fbc02d;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Dark Mode for Yellow Box: Darker background, lighter text */
+        body.dark-mode .info-box-yellow {
+            background: #4a3e05; /* Deep muddy yellow */
+            border-left-color: #fdd835;
+            color: #e0e0e0;
+        }
+
+        /* --- FIXED: Care Step Cards (Blue & Purple) --- */
+        .care-card-blue {
+            border-left: 5px solid #3498db;
+            background: #ebf5fb;
+            padding: 25px;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .care-title-blue { color: #3498db; font-size: 20px; font-weight: 600; margin-bottom: 15px; }
+
+        body.dark-mode .care-card-blue {
+            background: #1a2a3a; /* Dark Blue */
+            border-left-color: #5dade2;
+        }
+        body.dark-mode .care-title-blue { color: #5dade2; }
+
+        .care-card-purple {
+            border-left: 5px solid #9b59b6;
+            background: #f4ecf7;
+            padding: 25px;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .care-title-purple { color: #9b59b6; font-size: 20px; font-weight: 600; margin-bottom: 15px; }
+
+        body.dark-mode .care-card-purple {
+            background: #2c1e30; /* Dark Purple */
+            border-left-color: #af7ac5;
+        }
+        body.dark-mode .care-title-purple { color: #af7ac5; }
+
+        .care-card-blue:hover, .care-card-purple:hover {
+            transform: translateY(-5px);
+        }
+
         .step-list {
             list-style: none;
             margin: 0;
@@ -367,7 +420,7 @@
         }
 
         body.dark-mode .step-list li {
-            color: step-list;
+            color: #d0d0d0; /* Readable light grey text */
         }
 
         .step-list li::before {
@@ -376,6 +429,10 @@
             left: 0;
             color: #16a085;
             font-weight: bold;
+        }
+
+        body.dark-mode .step-list li::before {
+            color: #1abc9c;
         }
 
         .alert-box {
@@ -446,8 +503,8 @@
         <div class="header">
             <div class="header-left" id="headerLeft">
                 <img src="images/1.png" class="logo">
-                <img src="images/2.png" class="logo" style="background: #8b7355;">
-                <div class="header-title">Edukasi APD 20 kV</div>
+                <img src="images/2.png" class="logo">
+                <div class="header-title">Perawatan APD</div>
             </div>
             <div class="toggle-switch" id="darkModeToggle"></div>
         </div>
@@ -463,7 +520,7 @@
                 <p class="content-text">
                     Karet isolasi pada APD rentan terhadap kerusakan akibat faktor lingkungan seperti kotoran, minyak, sinar UV, dan benda tajam. 
                 </p>
-                <div style="background: #fff9c4; padding: 15px; border-radius: 8px; border-left: 4px solid #fbc02d; color: #555; margin-bottom: 20px;">
+                <div class="info-box-yellow">
                     <strong>Konsep Fisika:</strong> Debu atau minyak di permukaan isolator dapat menciptakan jalur konduktif (surface tracking). Hal ini menurunkan nilai hambatan (R) dan memungkinkan arus bocor (leakage current) mengalir melintasi permukaan sarung tangan, yang dapat membahayakan pengguna.
                 </div>
             </div>
@@ -502,8 +559,8 @@
                 <h2 class="section-title">Pembersihan & Penyimpanan</h2>
                 
                 <div class="care-grid">
-                    <div class="care-card" style="border-left-color: #3498db; background: #ebf5fb;">
-                        <div class="care-title" style="color: #3498db;">Cara Membersihkan</div>
+                    <div class="care-card-blue">
+                        <div class="care-title-blue">Cara Membersihkan</div>
                         <ul class="step-list">
                             <li>Gunakan air hangat dan sabun netral (mild soap).</li>
                             <li>Jangan gunakan deterjen keras, pemutih, atau pelarut minyak (bensin/thinner) karena dapat merusak struktur kimia karet.</li>
@@ -512,8 +569,8 @@
                         </ul>
                     </div>
 
-                    <div class="care-card" style="border-left-color: #9b59b6; background: #f4ecf7;">
-                        <div class="care-title" style="color: #9b59b6;">Cara Menyimpan</div>
+                    <div class="care-card-purple">
+                        <div class="care-title-purple">Cara Menyimpan</div>
                         <ul class="step-list">
                             <li>Simpan di tempat sejuk, kering, dan gelap (jauh dari sinar UV/Matahari).</li>
                             <li>Simpan sarung tangan dalam tas pelindung (canvas bag) secara vertikal/digantung.</li>
