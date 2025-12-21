@@ -867,8 +867,18 @@
                 optionsContainer.appendChild(optionDiv);
             });
 
+            // --- NEW LOGIC ADDED HERE ---
+            const nextBtn = document.getElementById('nextBtn');
+            // Check if this is the last question (index 9)
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'Lihat Hasil'; // Or 'Kuis Selesai'
+            } else {
+                nextBtn.textContent = 'Soal Berikutnya';
+            }
+            // -----------------------------
+
             document.getElementById('feedback').classList.remove('show');
-            document.getElementById('nextBtn').disabled = true;
+            nextBtn.disabled = true;
             answered = false;
         }
 
