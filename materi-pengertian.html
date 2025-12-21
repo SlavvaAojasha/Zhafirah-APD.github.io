@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengertian & Fungsi APD - Edukasi APD 20 kV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        body.dark-mode .sidebar {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn {
+            background: #2d2d2d;
+        }
+
+        .hamburger-btn span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn span {
+            background: #e0e0e0;
+        }
+
+        .sidebar.closed ~ .hamburger-btn {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .menu-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+
+        body.dark-mode .menu-item:hover {
+            background: #3a3a3a;
+        }
+
+        .menu-item.expandable {
+            position: relative;
+        }
+
+        .menu-item.expandable::before {
+            content: '▼';
+            margin-right: 10px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .menu-item.expandable.expanded::before {
+            transform: rotate(-180deg);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .submenu.show {
+            max-height: 300px;
+        }
+
+        .submenu-item {
+            padding: 12px 10px 12px 35px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .submenu-item {
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .submenu-item:hover {
+            background: #f8f8f8;
+        }
+
+        body.dark-mode .submenu-item:hover {
+            background: #404040;
+        }
+
+        .submenu-item.active {
+            background: #e8f4f8;
+            font-weight: 600;
+        }
+
+        body.dark-mode .submenu-item.active {
+            background: #3a4a4a;
+        }
+
+        a.menu-item, a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .header {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .header-left.shifted {
+            margin-left: 60px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #f4d03f;
+            border-radius: 5px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .page-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .content-section {
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .content-section {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #2980b9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2980b9;
+        }
+
+        body.dark-mode .section-title {
+            color: #5dade2;
+            border-bottom-color: #5dade2;
+        }
+
+        .content-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .content-text {
+            color: #c0c0c0;
+        }
+
+        .definition-box {
+            background: #eaf2f8;
+            border-left: 5px solid #2980b9;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        body.dark-mode .definition-box {
+            background: #1f3a4d;
+            border-left-color: #5dade2;
+        }
+
+        .law-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        body.dark-mode .law-card {
+            background: #333;
+            border-color: #555;
+        }
+
+        .law-card:hover {
+            transform: translateX(5px);
+            border-left: 5px solid #27ae60;
+        }
+
+        .law-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        body.dark-mode .law-title {
+            color: #ecf0f1;
+        }
+
+        .physics-concept {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            align-items: center;
+        }
+
+        .physics-icon {
+            font-size: 60px;
+            background: #f4d03f;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        ul {
+            margin-left: 30px;
+            line-height: 2;
+        }
+
+        body.dark-mode ul {
+            color: #c0c0c0;
+        }
+
+        body.dark-mode .physics-icon {
+            color: #ffffff;       
+            background: #b7950b;  
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .sidebar { transform: translateX(-250px); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .content-area { padding: 20px; }
+            .page-hero { padding: 40px 25px; }
+            .page-hero h1 { font-size: 32px; }
+            .physics-concept { flex-direction: column; text-align: center; }
+            .header { padding-left: 70px; }
+            .header-title { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✕</div>
+    
+        <a href="index.html" class="menu-item">Beranda</a>
+
+        <div class="menu-item expandable expanded" onclick="toggleSubmenu(this)">
+            Materi APD
+        </div>
+
+        <div class="submenu show">
+            <a href="materi-pengertian.html" class="submenu-item active">Pengertian & Fungsi APD</a>
+            <a href="materi-prosedur.html" class="submenu-item">Prosedur Pemeliharaan 20 kV</a>
+            <a href="materi-k3.html" class="submenu-item">APD & K3 Pemeliharaan 20 kV</a>
+            <a href="materi-perawatan.html" class="submenu-item">Perawatan APD</a>
+        </div>
+
+        <a href="video.html" class="menu-item">Video Edukasi APD</a>
+        <a href="quiz.html" class="menu-item">Kuis</a>
+    </div>
+
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-content" id="mainContent">
+        <div class="header">
+            <div class="header-left" id="headerLeft">
+                <img src="images/1.png" class="logo">
+                <img src="images/2.png" class="logo" style="background: #8b7355;">
+                <div class="header-title">Edukasi APD 20 kV</div>
+            </div>
+            <div class="toggle-switch" id="darkModeToggle"></div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-hero">
+                <h1>🛡️ Pengertian & Dasar Hukum</h1>
+                <p>Memahami definisi, landasan hukum, dan konsep fisika di balik penggunaan Alat Pelindung Diri (APD) pada pekerjaan kelistrikan.</p>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Apa itu APD?</h2>
+                <div class="definition-box">
+                    <strong>Alat Pelindung Diri (APD)</strong> adalah seperangkat alat yang mampu melindungi individu dengan cara menutup sebagian atau seluruh tubuh agar terhindar dari potensi bahaya di tempat kerja.
+                </div>
+                <p class="content-text">
+                    Dalam konteks kelistrikan tegangan menengah (20 kV), APD bukan sekadar pelengkap seragam, melainkan barier fisik terakhir yang memisahkan tubuh manusia dari aliran listrik mematikan. Penggunaan APD tidak menghilangkan bahaya, tetapi <strong>mengurangi risiko</strong> terjadinya cedera fatal jika terjadi kecelakaan.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Dasar Hukum K3 Listrik</h2>
+                <p class="content-text">Penggunaan APD diatur secara ketat oleh regulasi nasional untuk menjamin hak keselamatan setiap pekerja.</p>
+                
+                <div class="law-card">
+                    <div class="law-title">UU No. 1 Tahun 1970</div>
+                    <p class="content-text" style="margin-bottom:0;">Tentang Keselamatan Kerja. Mewajibkan perusahaan menyediakan APD dan mewajibkan tenaga kerja untuk memakainya secara benar.</p>
+                </div>
+
+                <div class="law-card">
+                    <div class="law-title">Permenaker No. 08 Tahun 2010</div>
+                    <p class="content-text" style="margin-bottom:0;">Tentang Alat Pelindung Diri. Mengatur spesifikasi, standar, dan manajemen pengelolaan APD di tempat kerja.</p>
+                </div>
+
+                <div class="law-card">
+                    <div class="law-title">SNI / SPLN</div>
+                    <p class="content-text" style="margin-bottom:0;">Standar Nasional Indonesia dan Standar PLN yang mengatur spesifikasi teknis peralatan listrik, termasuk kemampuan isolasi helm, sepatu, dan sarung tangan.</p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">Konsep Fisika: Isolator & Dielektrik</h2>
+                <p class="content-text">
+                    Mengapa karet bisa melindungi kita dari listrik 20.000 Volt? Hal ini berkaitan erat dengan konsep <strong>Resistivitas</strong> dan <strong>Kekuatan Dielektrik</strong>.
+                </p>
+
+                <div class="physics-concept">
+                    <div class="physics-icon">Ω</div>
+                    <div>
+                        <h3 style="color: #2980b9; margin-bottom: 10px;">Hukum Ohm (I = V / R)</h3>
+                        <p class="content-text">
+                            Agar arus (I) yang mengalir ke tubuh menjadi sangat kecil (mendekati 0) saat tegangan (V) sangat tinggi, kita memerlukan hambatan (R) yang <strong>sangat besar</strong>. 
+                        </p>
+                        <p class="content-text">
+                            APD seperti sarung tangan isolasi dan sepatu safety dibuat dari bahan polimer/karet khusus yang memiliki resistansi hingga jutaan Ohm (Mega Ohm). Inilah yang disebut bahan <strong>Isolator</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; background: #fff9c4; padding: 15px; border-radius: 8px; border-left: 4px solid #fbc02d; color: #555;">
+                    <strong>Fakta Fisika:</strong> Udara juga bisa menjadi konduktor jika tegangannya cukup tinggi (breakdown voltage). Oleh karena itu, APD 20 kV harus memiliki ketebalan tertentu agar tidak tembus oleh loncatan elektron (Arc Flash).
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2 class="section-title">Fungsi Utama APD</h2>
+                <ul>
+                    <li><strong>Isolasi Listrik:</strong> Mencegah aliran arus masuk ke tubuh (Contact Hazard).</li>
+                    <li><strong>Perlindungan Termal:</strong> Melindungi kulit dari panas ekstrim akibat Arc Flash.</li>
+                    <li><strong>Perlindungan Mekanis:</strong> Melindungi dari benturan, tusukan benda tajam, atau kejatuhan material.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2025 Zhafirah Mumtaz Zaliyanti. Media Pembelajaran Pendidikan Fisika.
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const headerLeft = document.getElementById('headerLeft');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+            } else {
+                sidebar.classList.toggle('closed');
+                mainContent.classList.toggle('expanded');
+                headerLeft.classList.toggle('shifted');
+            }
+        }
+
+        function toggleSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('expanded');
+            submenu.classList.toggle('show');
+        }
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+        }
+
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.classList.toggle('active');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    </script>
+</body>
+</html>
