@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis - Edukasi APD 20 kV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            z-index: 1000;
+        }
+
+        body.dark-mode .sidebar {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .hamburger-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn {
+            background: #2d2d2d;
+        }
+
+        .hamburger-btn span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .hamburger-btn span {
+            background: #e0e0e0;
+        }
+
+        .sidebar.closed ~ .hamburger-btn {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .menu-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+
+        body.dark-mode .menu-item:hover {
+            background: #3a3a3a;
+        }
+
+        .menu-item.expandable {
+            position: relative;
+        }
+
+        .menu-item.expandable::before {
+            content: '▼';
+            margin-right: 10px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .menu-item.expandable.expanded::before {
+            transform: rotate(-180deg);
+        }
+
+        .menu-item.active {
+            background: #e8f4f8;
+            font-weight: 600;
+        }
+
+        body.dark-mode .menu-item.active {
+            background: #3a4a4a;
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .submenu.show {
+            max-height: 300px;
+        }
+
+        .submenu-item {
+            padding: 12px 10px 12px 35px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .submenu-item {
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .submenu-item:hover {
+            background: #f8f8f8;
+        }
+
+        body.dark-mode .submenu-item:hover {
+            background: #404040;
+        }
+
+        a.menu-item, a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .header {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .header-left.shifted {
+            margin-left: 60px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #f4d03f;
+            border-radius: 5px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-hero {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .quiz-container {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #8e44ad;
+        }
+
+        body.dark-mode .quiz-header {
+            border-bottom-color: #9b59b6;
+        }
+
+        .quiz-progress {
+            font-size: 18px;
+            font-weight: 600;
+            color: #8e44ad;
+        }
+
+        body.dark-mode .quiz-progress {
+            color: #b183c6;
+        }
+
+        .quiz-score {
+            font-size: 18px;
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        body.dark-mode .question-text {
+            color: #ecf0f1;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .option {
+            background: #252525;
+        }
+
+        .option:hover {
+            border-color: #8e44ad;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #e8daef;
+            border-color: #8e44ad;
+        }
+
+        body.dark-mode .option.selected {
+            background: #3a2a45;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        body.dark-mode .option.correct {
+            background: #1e3a25;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        body.dark-mode .option.incorrect {
+            background: #3a2020;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-right: 10px;
+            color: #8e44ad;
+        }
+
+        body.dark-mode .option-label {
+            color: #b183c6;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        body.dark-mode .feedback.correct {
+            background: #1e3a25;
+            color: #7dffaa;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        body.dark-mode .feedback.incorrect {
+            background: #3a2020;
+            color: #ff9999;
+        }
+
+        .feedback strong {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .feedback-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .feedback-section {
+            border-top-color: rgba(255,255,255,0.1);
+        }
+
+        .feedback-section strong {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .wrong-options {
+            margin-top: 10px;
+            padding-left: 20px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .quiz-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #8e44ad;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #7d3c98;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .results-container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .results-score {
+            font-size: 72px;
+            font-weight: bold;
+            color: #8e44ad;
+            margin: 20px 0;
+        }
+
+        body.dark-mode .results-score {
+            color: #b183c6;
+        }
+
+        .results-message {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        body.dark-mode .results-message {
+            color: #ecf0f1;
+        }
+
+        .results-details {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        body.dark-mode .results-details {
+            background: #252525;
+        }
+
+        .results-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 18px;
+        }
+
+        body.dark-mode .results-stat {
+            border-bottom-color: #444;
+        }
+
+        .results-stat:last-child {
+            border-bottom: none;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .sidebar { transform: translateX(-250px); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .content-area { padding: 20px; }
+            .page-hero { padding: 40px 25px; }
+            .page-hero h1 { font-size: 32px; }
+            .quiz-container { padding: 25px; }
+            .header { padding-left: 70px; }
+            .header-title { display: none; }
+            .quiz-buttons { flex-direction: column; }
+            .results-score { font-size: 56px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="close-btn" onclick="toggleSidebar()">✕</div>
+    
+        <a href="index.html" class="menu-item">Beranda</a>
+
+        <div class="menu-item expandable" onclick="toggleSubmenu(this)">
+            Materi APD
+        </div>
+
+        <div class="submenu">
+            <a href="materi-pengertian.html" class="submenu-item">Pengertian & Fungsi APD</a>
+            <a href="materi-prosedur.html" class="submenu-item">Prosedur Pemeliharaan 20 kV</a>
+            <a href="materi-k3.html" class="submenu-item">APD & K3 Pemeliharaan 20 kV</a>
+            <a href="materi-perawatan.html" class="submenu-item">Perawatan APD</a>
+        </div>
+
+        <a href="video.html" class="menu-item">Video Edukasi APD</a>
+        <a href="quiz.html" class="menu-item active">Kuis</a>
+    </div>
+
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-content" id="mainContent">
+        <div class="header">
+            <div class="header-left" id="headerLeft">
+                <img src="images/1.png" class="logo">
+                <img src="images/2.png" class="logo" style="background: #8b7355;">
+                <div class="header-title">Edukasi APD 20 kV</div>
+            </div>
+            <div class="toggle-switch" id="darkModeToggle"></div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-hero">
+                <h1>📝 Kuis Pemahaman</h1>
+                <p>APD dan Keselamatan Kerja Listrik Tegangan Menengah (20 kV)</p>
+            </div>
+
+            <div class="quiz-container" id="quizContainer">
+                <div class="quiz-header">
+                    <div class="quiz-progress" id="quizProgress">Soal 1 dari 10</div>
+                    <div class="quiz-score" id="quizScore">Skor: 0</div>
+                </div>
+
+                <div class="question-container" id="questionContainer">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="options-container" id="optionsContainer"></div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+
+                <div class="quiz-buttons">
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Soal Berikutnya</button>
+                    <button class="btn btn-secondary" id="restartBtn" onclick="restartQuiz()" style="display: none;">Ulangi Quiz</button>
+                </div>
+            </div>
+
+            <div class="results-container" id="resultsContainer">
+                <h2 style="font-size: 32px; color: #8e44ad; margin-bottom: 20px;">🎉 Kuis Selesai!</h2>
+                <div class="results-score" id="finalScore">0%</div>
+                <div class="results-message" id="resultsMessage"></div>
+                
+                <div class="results-details">
+                    <div class="results-stat">
+                        <span><strong>Total Soal:</strong></span>
+                        <span id="totalQuestions">10</span>
+                    </div>
+                    <div class="results-stat">
+                        <span><strong>Jawaban Benar:</strong></span>
+                        <span id="correctAnswers" style="color: #27ae60;">0</span>
+                    </div>
+                    <div class="results-stat">
+                        <span><strong>Jawaban Salah:</strong></span>
+                        <span id="incorrectAnswers" style="color: #e74c3c;">0</span>
+                    </div>
+                </div>
+
+                <div class="quiz-buttons">
+                    <button class="btn btn-primary" onclick="restartQuiz()">🔄 Ulangi Quiz</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='index.html'">🏠 Kembali ke Beranda</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2025 Zhafirah Mumtaz Zaliyanti. Media Pembelajaran Pendidikan Fisika.
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Dalam konteks fisika kelistrikan, alasan utama penggunaan sarung tangan isolasi pada pekerjaan 20 kV adalah karena sarung tangan tersebut memiliki:",
+                options: [
+                    "Konduktivitas tinggi untuk menyalurkan arus ke tanah",
+                    "Resistansi sangat tinggi sehingga menghambat aliran arus listrik",
+                    "Kapasitansi besar untuk menyimpan muatan listrik",
+                    "Induktansi tinggi untuk menurunkan tegangan"
+                ],
+                correct: 1,
+                explanation: "Dalam fisika kelistrikan, arus listrik hanya dapat mengalir jika terdapat lintasan dengan resistansi rendah. Sarung tangan isolasi dibuat dari material karet dielektrik yang memiliki hambatan listrik sangat besar, sehingga arus tidak dapat mengalir ke tubuh pekerja.",
+                wrongExplanations: [
+                    "❌ A salah: APD tidak bertujuan menyalurkan arus.",
+                    "❌ C salah: APD tidak berfungsi menyimpan muatan.",
+                    "❌ D salah: Induktansi tidak relevan dalam konteks perlindungan sentuhan langsung."
+                ]
+            },
+            {
+                question: "Tubuh manusia dapat menjadi sangat berbahaya saat menyentuh peralatan bertegangan karena secara fisika tubuh manusia bersifat:",
+                options: [
+                    "Isolator sempurna",
+                    "Konduktor dengan resistansi rendah",
+                    "Semikonduktor yang stabil",
+                    "Netral terhadap arus listrik"
+                ],
+                correct: 1,
+                explanation: "Tubuh manusia mengandung cairan elektrolit yang memungkinkan arus listrik mengalir. Oleh karena itu, tubuh manusia bukan isolator, melainkan konduktor dengan resistansi relatif rendah, terutama saat kondisi lembap.",
+                wrongExplanations: [
+                    "❌ A salah: Manusia bukan isolator sempurna.",
+                    "❌ C salah: Tubuh manusia bukan semikonduktor elektronik.",
+                    "❌ D salah: Arus listrik dapat mengalir melalui tubuh manusia."
+                ]
+            },
+            {
+                question: "Arc Flash pada instalasi tegangan menengah berbahaya karena menghasilkan:",
+                options: [
+                    "Arus searah bertegangan rendah",
+                    "Gelombang magnet statis",
+                    "Energi panas sangat tinggi dalam waktu singkat",
+                    "Medan listrik lemah namun stabil"
+                ],
+                correct: 2,
+                explanation: "Arc Flash adalah loncatan listrik yang menghasilkan energi termal sangat besar, bahkan dapat mencapai ribuan derajat Celsius dalam waktu yang sangat singkat, sehingga berpotensi menyebabkan luka bakar serius.",
+                wrongExplanations: [
+                    "❌ A salah: Arc Flash bukan arus searah bertegangan rendah.",
+                    "❌ B salah: Medan magnet statis bukan bahaya utama Arc Flash.",
+                    "❌ D salah: Dampaknya justru sangat ekstrem, bukan lemah."
+                ]
+            },
+            {
+                question: "Sebelum pemeliharaan dilakukan, pengukuran menggunakan Voltage Stick Detector 20 kV bertujuan untuk:",
+                options: [
+                    "Menurunkan tegangan sistem",
+                    "Menentukan besar arus hubung singkat",
+                    "Memastikan tidak adanya tegangan sisa",
+                    "Mengukur tahanan isolasi kabel"
+                ],
+                correct: 2,
+                explanation: "Walaupun peralatan sudah diputus, masih mungkin terdapat tegangan sisa akibat muatan kapasitif. Voltage Stick Detector digunakan untuk memastikan kondisi benar-benar aman sebelum disentuh.",
+                wrongExplanations: [
+                    "❌ A salah: Alat ini tidak menurunkan tegangan.",
+                    "❌ B salah: Tidak mengukur arus hubung singkat.",
+                    "❌ D salah: Bukan alat ukur tahanan isolasi."
+                ]
+            },
+            {
+                question: "Secara fisika, fungsi utama grounding (pembumian) pada peralatan listrik adalah untuk:",
+                options: [
+                    "Menyimpan muatan listrik sementara",
+                    "Menghilangkan muatan listrik sisa ke bumi",
+                    "Menaikkan nilai resistansi sistem",
+                    "Menstabilkan frekuensi jaringan"
+                ],
+                correct: 1,
+                explanation: "Grounding berfungsi sebagai jalur aman untuk mengalirkan muatan listrik sisa menuju bumi, sehingga peralatan berada pada potensial nol dan aman untuk disentuh.",
+                wrongExplanations: [
+                    "❌ A salah: Grounding bukan untuk menyimpan muatan.",
+                    "❌ C salah: Tujuannya bukan menaikkan resistansi.",
+                    "❌ D salah: Frekuensi jaringan tidak dipengaruhi grounding."
+                ]
+            },
+            {
+                question: "Mengapa proses pembebasan tegangan (de-energizing) harus dilakukan sebelum pemeliharaan?",
+                options: [
+                    "Agar alat ukur bekerja lebih akurat",
+                    "Untuk mengurangi konsumsi daya",
+                    "Untuk menghilangkan sumber energi listrik yang berbahaya",
+                    "Agar grounding tidak diperlukan"
+                ],
+                correct: 2,
+                explanation: "Pemeliharaan hanya dapat dilakukan dengan aman jika sumber energi listrik telah dihilangkan sepenuhnya. Tegangan aktif merupakan bahaya utama dalam pekerjaan listrik.",
+                wrongExplanations: [
+                    "❌ A salah: Akurasi alat ukur bukan tujuan utama.",
+                    "❌ B salah: Efisiensi energi bukan fokus keselamatan.",
+                    "❌ D salah: Grounding tetap diperlukan meskipun tegangan dilepas."
+                ]
+            },
+            {
+                question: "Kerusakan kecil berupa lubang jarum (pinhole) pada sarung tangan isolasi sangat berbahaya karena:",
+                options: [
+                    "Menurunkan elastisitas karet",
+                    "Menyebabkan sarung tangan mudah sobek",
+                    "Menjadi jalur konduksi arus listrik ke tubuh",
+                    "Mengurangi kenyamanan pengguna"
+                ],
+                correct: 2,
+                explanation: "Lubang kecil pada sarung tangan isolasi dapat menjadi titik masuk arus listrik. Pada tegangan tinggi seperti 20 kV, kebocoran sekecil apa pun sangat berbahaya.",
+                wrongExplanations: [
+                    "❌ A & B salah: Hanya dampak fisik, bukan bahaya utama.",
+                    "❌ D salah: Bukan alasan keselamatan."
+                ]
+            },
+            {
+                question: "Secara konsep fisika material, paparan sinar matahari langsung pada APD berbahan karet dapat menyebabkan:",
+                options: [
+                    "Peningkatan daya hantar listrik",
+                    "Penurunan resistansi isolasi",
+                    "Degradasi struktur material karet",
+                    "Peningkatan kekuatan mekanis"
+                ],
+                correct: 2,
+                explanation: "Paparan panas dan sinar UV dapat menyebabkan karet menjadi getas dan retak. Hal ini menurunkan kemampuan isolasi APD secara signifikan.",
+                wrongExplanations: [
+                    "❌ A & B salah: Bukan efek utama paparan matahari.",
+                    "❌ D salah: Justru kebalikannya, kekuatan menurun."
+                ]
+            },
+            {
+                question: "Alasan pekerjaan pemeliharaan 20 kV tidak boleh dilakukan seorang diri adalah karena:",
+                options: [
+                    "Kebutuhan administratif SOP",
+                    "Kompleksitas alat kerja",
+                    "Risiko bahaya tinggi yang memerlukan pengawasan dan bantuan darurat",
+                    "Efisiensi waktu kerja"
+                ],
+                correct: 2,
+                explanation: "Pekerjaan 20 kV memiliki potensi kecelakaan fatal. Kehadiran pengawas dan tim memastikan prosedur dipatuhi dan bantuan dapat segera diberikan jika terjadi insiden.",
+                wrongExplanations: [
+                    "❌ A salah: Ini bukan sekadar administrasi.",
+                    "❌ B salah: Alat bisa digunakan sendiri, tapi risikonya tinggi.",
+                    "❌ D salah: Bukan alasan utama."
+                ]
+            },
+            {
+                question: "Dalam konteks pembelajaran fisika terapan, penggunaan APD pada pekerjaan listrik menunjukkan bahwa:",
+                options: [
+                    "Fisika hanya relevan di laboratorium",
+                    "Keselamatan kerja terpisah dari konsep fisika",
+                    "Konsep fisika memiliki penerapan langsung dalam keselamatan manusia",
+                    "APD menggantikan kebutuhan pemahaman fisika"
+                ],
+                correct: 2,
+                explanation: "APD menunjukkan bahwa konsep fisika seperti arus, resistansi, dan isolasi memiliki peran nyata dalam melindungi keselamatan manusia, bukan hanya teori di kelas.",
+                wrongExplanations: [
+                    "❌ A salah: Fisika justru sangat aplikatif.",
+                    "❌ B salah: Keselamatan kerja berbasis fisika.",
+                    "❌ D salah: APD tidak menggantikan pemahaman fisika."
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('quizProgress').textContent = `Soal ${currentQuestion + 1} dari ${questions.length}`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            const labels = ['A', 'B', 'C', 'D'];
+            q.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `<span class="option-label">${labels[index]}.</span>${option}`;
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('nextBtn').disabled = true;
+            answered = false;
+        }
+
+        function selectOption(selected) {
+            if (answered) return;
+
+            answered = true;
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, index) => {
+                opt.classList.add('disabled');
+                if (index === q.correct) {
+                    opt.classList.add('correct');
+                }
+                if (index === selected && selected !== q.correct) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            if (selected === q.correct) {
+                score++;
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `
+                    <strong>✓ Benar!</strong>
+                    <div class="feedback-section">
+                        <strong>Pembahasan:</strong>
+                        <p>${q.explanation}</p>
+                    </div>
+                `;
+                document.getElementById('quizScore').textContent = `Skor: ${score}`;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                const wrongOptions = q.wrongExplanations.join('<br>');
+                feedback.innerHTML = `
+                    <strong>✗ Jawaban Salah!</strong>
+                    <div class="feedback-section">
+                        <strong>Pembahasan:</strong>
+                        <p>${q.explanation}</p>
+                    </div>
+                    <div class="feedback-section">
+                        <div class="wrong-options">${wrongOptions}</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsContainer').classList.add('show');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('finalScore').textContent = `${percentage}%`;
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('correctAnswers').textContent = score;
+            document.getElementById('incorrectAnswers').textContent = questions.length - score;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🏆 Luar Biasa! Anda memiliki pemahaman yang sangat baik tentang APD dan K3!';
+            } else if (percentage >= 70) {
+                message = '👍 Bagus! Anda memiliki pemahaman yang baik. Terus belajar!';
+            } else if (percentage >= 50) {
+                message = '📚 Cukup Baik! Masih ada ruang untuk peningkatan. Coba pelajari materi kembali.';
+            } else {
+                message = '💪 Jangan Menyerah! Pelajari kembali materi dengan seksama dan coba lagi.';
+            }
+            
+            document.getElementById('resultsMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            document.getElementById('quizScore').textContent = 'Skor: 0';
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultsContainer').classList.remove('show');
+            loadQuestion();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const headerLeft = document.getElementById('headerLeft');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+            } else {
+                sidebar.classList.toggle('closed');
+                mainContent.classList.toggle('expanded');
+                headerLeft.classList.toggle('shifted');
+            }
+        }
+
+        function toggleSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('expanded');
+            submenu.classList.toggle('show');
+        }
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+        }
+
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.classList.toggle('active');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
